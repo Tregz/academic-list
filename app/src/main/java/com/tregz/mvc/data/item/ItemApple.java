@@ -1,4 +1,4 @@
-package com.tregz.mvc.data;
+package com.tregz.mvc.data.item;
 
 import android.util.Log;
 
@@ -7,9 +7,9 @@ import com.tregz.mvc.core.date.DateUtil;
 
 import java.util.Date;
 
-public class DataApple {
+public class ItemApple {
 
-    private String TAG = DataApple.class.getSimpleName();
+    private String TAG = ItemApple.class.getSimpleName();
 
     // Color
 
@@ -57,7 +57,7 @@ public class DataApple {
         this.ripe = ripe;
     }
 
-    public DataApple(Date ripe) {
+    public ItemApple(Date ripe) {
         this.ripe = ripe;
     }
 
