@@ -17,10 +17,13 @@ import androidx.annotation.Nullable;
 
 import com.tregz.mvc.R;
 import com.tregz.mvc.arch.user.UserShared;
+import com.tregz.mvc.base.BaseActivity;
 import com.tregz.mvc.base.BaseFragment;
 import com.tregz.mvc.core.date.DateUtil;
+import com.tregz.mvc.data.DataType;
 import com.tregz.mvc.data.user.UserModel;
 import com.tregz.mvc.main.MainFragment;
+import com.tregz.mvc.main.list.ListCollection;
 
 public class UserFragment extends BaseFragment {
 
@@ -55,14 +58,18 @@ public class UserFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        EditText emailEditor = view.findViewById(R.id.email_editor);
+        final EditText emailEditor = view.findViewById(R.id.email_editor);
         emailEditor.setOnFocusChangeListener(emailListener);
         if (preferences != null) emailEditor.setText(preferences.getEmail());
-        view.findViewById(R.id.birth_date_editor).setOnFocusChangeListener(birthDateListener);
-        view.findViewById(R.id.first_name_editor).setOnFocusChangeListener(firstNameListener);
-        view.findViewById(R.id.last_name_editor).setOnFocusChangeListener(lastNameListener);
-        view.findViewById(R.id.phone_number_editor).setOnFocusChangeListener(phoneNumberListener);
-        CheckBox checkBox = view.findViewById(R.id.allergic_box);
+        final EditText birthDate = view.findViewById(R.id.birth_date_editor);
+        birthDate.setOnFocusChangeListener(birthDateListener);
+        final EditText firstName = view.findViewById(R.id.first_name_editor);
+        firstName.setOnFocusChangeListener(firstNameListener);
+        final EditText lastName = view.findViewById(R.id.last_name_editor);
+        lastName.setOnFocusChangeListener(lastNameListener);
+        final EditText phoneNumber = view.findViewById(R.id.phone_number_editor);
+        phoneNumber.setOnFocusChangeListener(phoneNumberListener);
+        final CheckBox checkBox = view.findViewById(R.id.allergic_box);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -88,6 +95,30 @@ public class UserFragment extends BaseFragment {
             }
         });
         spinner.setSelection(user.getGender());
+
+        view.findViewById(R.id.negative_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                birthDate.setText("");
+                emailEditor.setText("");
+                firstName.setText("");
+                lastName.setText("");
+                phoneNumber.setText("");
+                checkBox.setSelected(false);
+            }
+        });
+
+        view.findViewById(R.id.positive_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, user.getEmail());
+                ListCollection.add(user);
+                UserFragmentDirections.ActionAuthFragmentToListFragment action;
+                action = UserFragmentDirections.actionAuthFragmentToListFragment();
+                action.setType(DataType.USER.ordinal());
+                if (getActivity() != null) ((BaseActivity)getActivity()).navigate(action);
+            }
+        });
     }
 
     @Override

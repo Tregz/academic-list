@@ -3,9 +3,11 @@ package com.tregz.mvc.data.user;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tregz.mvc.data.DataModel;
+
 import java.util.Date;
 
-public class UserModel implements Parcelable {
+public class UserModel extends DataModel {
     public static final String TAG = UserModel.class.getSimpleName();
 
     public UserModel() {}
@@ -73,7 +75,6 @@ public class UserModel implements Parcelable {
     public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
 
     @Override
     public int describeContents() {

@@ -7,18 +7,17 @@ import android.util.Log;
 import com.tregz.mvc.R;
 import com.tregz.mvc.core.date.DateUtil;
 import com.tregz.mvc.data.DataModel;
+import com.tregz.mvc.data.user.UserModel;
 
 import java.util.Date;
 
-public class ItemApple extends ItemModel {
+public class ItemStrawberry extends ItemModel {
 
-    private String TAG = ItemApple.class.getSimpleName();
+    private String TAG = ItemStrawberry.class.getSimpleName();
 
     // Color
 
     private int color = R.color.colorPrimary;
-
-    private boolean wild = false;
 
     public int getColor() {
         return color;
@@ -62,18 +61,8 @@ public class ItemApple extends ItemModel {
         this.ripe = ripe;
     }
 
-    public ItemApple(Date ripe) {
+    public ItemStrawberry(Date ripe) {
         this.ripe = ripe;
-    }
-
-    @Override
-    public float getPrice() {
-        return super.getPrice() * (getWeight() >= 50 ? 2 : 1);
-    }
-
-    public ItemApple(boolean wild) {
-        setPrice(0.01f);
-        this.wild = wild;
     }
 
     public boolean edible() {
@@ -91,24 +80,22 @@ public class ItemApple extends ItemModel {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(color);
         parcel.writeSerializable(ripe);
-        parcel.writeInt(wild ? 1 : 0);
     }
 
-    private ItemApple(Parcel parcel) {
+    private ItemStrawberry(Parcel parcel) {
         color = parcel.readInt();
         ripe = (Date) parcel.readSerializable();
-        wild = parcel.readInt() == 1;
     }
 
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator<ItemApple>() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator<ItemStrawberry>() {
         @Override
-        public ItemApple createFromParcel(Parcel parcel) {
-            return new ItemApple(parcel);
+        public ItemStrawberry createFromParcel(Parcel parcel) {
+            return new ItemStrawberry(parcel);
         }
 
         @Override
-        public ItemApple[] newArray(int i) {
-            return new ItemApple[i];
+        public ItemStrawberry[] newArray(int i) {
+            return new ItemStrawberry[i];
         }
     };
 }

@@ -6,6 +6,12 @@ import android.view.Menu;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
+
+import com.tregz.mvc.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
     protected static String TAG = BaseActivity.class.getSimpleName();
@@ -60,5 +66,26 @@ public abstract class BaseActivity extends AppCompatActivity {
         PAUSED,
         STOPPED,
         DESTROYED
+    }
+
+    protected void pop() {
+        controller(this).popBackStack();
+    }
+
+    public void navigate(int action) {
+        controller(this).navigate(action);
+    }
+
+    public void navigate(NavDirections action) {
+        controller(this).navigate(action);
+    }
+
+    protected Integer fragmentId() {
+        NavDestination destination = controller(this).getCurrentDestination();
+        return destination != null ? destination.getId() : null;
+    }
+
+    private NavController controller(AppCompatActivity activity) {
+        return Navigation.findNavController(activity, R.id.nav_host_fragment);
     }
 }

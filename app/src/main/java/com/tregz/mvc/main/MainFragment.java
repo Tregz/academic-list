@@ -16,14 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tregz.mvc.R;
 import com.tregz.mvc.base.BaseFragment;
 import com.tregz.mvc.core.date.DateUtil;
 import com.tregz.mvc.core.read.ReadUtil;
+import com.tregz.mvc.data.DataModel;
 import com.tregz.mvc.data.item.ItemApple;
-import com.tregz.mvc.list.ListFruit;
+import com.tregz.mvc.main.list.ListCollection;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,19 +76,19 @@ public class MainFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ListFruit.getInstance().clear();
+        ListCollection.clear();
 
         log = view.findViewById(R.id.log);
         log.setMovementMethod(new ScrollingMovementMethod());
         sum = view.findViewById(R.id.sum);
         ItemApple apple1 = new ItemApple(new Date());  // today
-        onAppleCreated(ListFruit.getInstance().add(apple1));
+        onAppleCreated(ListCollection.add(apple1));
         apple1.setColor(R.color.colorAccent);
         ItemApple apple2 = new ItemApple(DateUtil.addMonth(new Date(), -1)); // last month
-        onAppleCreated(ListFruit.getInstance().add(apple2));
+        onAppleCreated(ListCollection.add(apple2));
         apple2.setColor(android.R.color.white);
         ItemApple apple3 = new ItemApple(null);
-        onAppleCreated(ListFruit.getInstance().add(apple3));
+        onAppleCreated(ListCollection.add(apple3));
         apple3.setColor(R.color.colorPrimary);
         apple();
 
@@ -123,7 +123,7 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 Integer number = ReadUtil.parse(input);
-                if (number != null && number == ListFruit.getInstance().getListCount())
+                if (number != null && number == ListCollection.getListCount())
                     sum.setText(getString(R.string.answer_positive));
                 else sum.setText(getString(R.string.answer_negative));
             }
@@ -133,23 +133,22 @@ public class MainFragment extends BaseFragment {
     private void apple() {
         ItemApple apple = new ItemApple(new Date());
         apple.setColor(R.color.colorPrimary);
-        onAppleCreated(ListFruit.getInstance().add(apple));
+        onAppleCreated(ListCollection.add(apple));
     }
 
-    private void onAppleCreated(@NonNull ItemApple apple) {
-        log.append(HtmlCompat.fromHtml("<b>Pomme ajoutée</b>", FROM_HTML_MODE_LEGACY));
-        String skeleton = "d MMMM yyyy";
-        SimpleDateFormat formatter = new SimpleDateFormat(skeleton, Locale.getDefault());
-        String day = apple.getRipe() != null ? formatter.format(apple.getRipe()) : null;
-        String unknown = "Non cueillie ou date de cueillette inconnue.";
-        String riped = day != null ? "Cueillie le " + day + "." : unknown;
-        log.append("\n" + riped + "\n");
-        String total = "Taille de la liste: " + ListFruit.getInstance().getListCount();
-        sum.setText(total);
-    }
-
-    private void toast(@NonNull String message) {
-        if (getContext() != null) Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    private void onAppleCreated(@NonNull DataModel item) {
+        if (item instanceof ItemApple) {
+            log.append(HtmlCompat.fromHtml("<b>Pomme ajoutée</b>", FROM_HTML_MODE_LEGACY));
+            String skeleton = "d MMMM yyyy";
+            SimpleDateFormat formatter = new SimpleDateFormat(skeleton, Locale.getDefault());
+            Date ripe = ((ItemApple)item).getRipe();
+            String day = ripe != null ? formatter.format(ripe) : null;
+            String unknown = "Non cueillie ou date de cueillette inconnue.";
+            String riped = day != null ? "Cueillie le " + day + "." : unknown;
+            log.append("\n" + riped + "\n");
+            String total = "Taille de la liste: " + ListCollection.getListCount();
+            sum.setText(total);
+        }
     }
 
     static {
